@@ -72,17 +72,16 @@ class RecipeListFragment : Fragment() {
                                     cardHeight = 250.dp
                                 )
                             } else {
+                                Log.d("TAG", "onCreateView: ${recipes.size}")
                                 LazyColumn {
                                     itemsIndexed(
                                         items = recipes
                                     ) { index, recipe ->
-                                        Log.d("TAG", "onCreateView: $index")
                                         viewModel.onChangeListScrollPosition(index)
                                         if ((index + 1) >= (viewModel.page.value * PAGE_SIZE) &&
                                             !viewModel.loading.value
                                         ){
                                             viewModel.nextPage()
-                                            Log.d("TAG", "onCreateView: triggered")
                                         }
 
                                         RecipeCard(recipe = recipe, onClick = {
