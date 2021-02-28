@@ -41,7 +41,9 @@ fun AppTheme(
 ){
 
     MaterialTheme(
-        colors = if (darkTheme) DarkThemeColors else LightThemeColors
+        colors = if (darkTheme) DarkThemeColors else LightThemeColors,
+        typography = QuickSandTypography,
+        shapes = AppShapes
     ) {
         content()
     }

@@ -1,8 +1,8 @@
 package ayush.foodie.presentation.ui.recipe_list
 
 
-import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import ayush.foodie.presentation.components.LoadingListShimmer
 import ayush.foodie.presentation.components.RecipeCard
 import ayush.foodie.presentation.components.SearchAppBar
 import ayush.foodie.presentation.theme.AppTheme
+import ayush.foodie.util.PAGE_SIZE
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -65,7 +67,7 @@ class RecipeListFragment : Fragment() {
                                 .fillMaxWidth()
                                 .background(color = MaterialTheme.colors.background)
                         ) {
-                            if (viewModel.loading.value) {
+                            if (viewModel.loading.value && recipes.isEmpty()) {
                                 LoadingListShimmer(
                                     cardHeight = 250.dp
                                 )
@@ -74,9 +76,25 @@ class RecipeListFragment : Fragment() {
                                     itemsIndexed(
                                         items = recipes
                                     ) { index, recipe ->
-                                        RecipeCard(recipe = recipe, onClick = { })
+                                        Log.d("TAG", "onCreateView: $index")
+                                        viewModel.onChangeListScrollPosition(index)
+                                        if ((index + 1) >= (viewModel.page.value * PAGE_SIZE) &&
+                                            !viewModel.loading.value
+                                        ){
+                                            viewModel.nextPage()
+                                            Log.d("TAG", "onCreateView: triggered")
+                                        }
+
+                                        RecipeCard(recipe = recipe, onClick = {
+
+                                        })
                                     }
                                 }
+                                if (recipes.isEmpty())
+                                    Text(
+                                        text = "No Results to show!",
+                                        style = MaterialTheme.typography.h3,
+                                    )
                             }
                         }
                     }
