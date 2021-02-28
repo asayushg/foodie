@@ -9,10 +9,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,11 +29,12 @@ fun SearchAppBar(
     selectedCategory: FoodCategory?,
     onSelectedCategoryChanged: (String) -> Unit,
     onCategoryScrollPositionChanged: (Float) -> Unit,
+    onToggleTheme: () -> Unit,
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth(),
-        color = Color.White,
+        color = MaterialTheme.colors.secondary,
         elevation = 8.dp
     ) {
 
@@ -41,7 +42,11 @@ fun SearchAppBar(
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 TextField(
-                    backgroundColor = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth(.9f)
+                        .padding(8.dp),
+                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                    backgroundColor = MaterialTheme.colors.surface,
                     value = query,
                     onValueChange = {
                         onQueryValueChanged(it)
@@ -62,11 +67,13 @@ fun SearchAppBar(
                             softKeyboardController?.hideSoftwareKeyboard()
                         }
                     },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.onSurface,
-                        background = Color.White
-                    )
                 )
+
+                IconButton(
+                    onClick = onToggleTheme
+                ){
+                    Icon(Icons.Filled.MoreVert)
+                }
             }
 
             val scrollState = rememberScrollState()

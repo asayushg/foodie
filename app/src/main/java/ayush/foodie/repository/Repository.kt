@@ -14,6 +14,6 @@ interface Repository {
     suspend fun getRecipe(
         token: String,
         id: Int
-    ): Recipe
+    ): Recipe?
 
 }

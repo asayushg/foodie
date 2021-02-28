@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ayush.foodie.domain.model.Recipe
 import ayush.foodie.repository.Repository
+import ayush.foodie.util.TAG
 import kotlinx.coroutines.launch
 
 class RecipeListViewModel
@@ -18,6 +19,7 @@ constructor(
 ) : ViewModel() {
 
     val query = mutableStateOf("")
+    val loading = mutableStateOf(false)
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
     var categoryScrollPosition: Float = 0f
@@ -29,18 +31,19 @@ constructor(
     fun newSearch() {
         viewModelScope.launch {
             resetSearchState()
+            loading.value = true
             val result = repository.searchRecipes(
                 token = token,
                 page = 1,
                 query = query.value,
             )
-            recipes.value = result
+           recipes.value = result
+            loading.value = false
         }
     }
 
     fun onSelectedCategoryChanged(category: String) {
         val newCategory = getFoodCategory(category)
-        Log.d("TAG", "onSelectedCategoryChanged: $category $newCategory")
         selectedCategory.value = newCategory
         onQueryChanged(category)
     }

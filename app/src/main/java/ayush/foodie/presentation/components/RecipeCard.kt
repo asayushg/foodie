@@ -32,7 +32,8 @@ fun RecipeCard(
             )
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        elevation = 8.dp
+        elevation = 8.dp,
+        backgroundColor = MaterialTheme.colors.surface
     ) {
 
         Column {
