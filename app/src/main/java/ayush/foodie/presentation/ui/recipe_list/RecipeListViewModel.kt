@@ -41,7 +41,6 @@ constructor(
 
         savedStateHandle.get<Int>(SAVE_STATE_LIST_PAGE)?.let {
             page.value = it
-            Log.d(TAG, "page: $it")
         }
 
         savedStateHandle.get<Float>(SAVE_STATE_CATEGORY_SCROLL)?.let {

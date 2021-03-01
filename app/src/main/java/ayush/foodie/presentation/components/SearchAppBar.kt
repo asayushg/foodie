@@ -1,5 +1,6 @@
 package ayush.foodie.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,16 +10,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import ayush.foodie.presentation.ui.recipe_list.FoodCategory
 import ayush.foodie.presentation.ui.recipe_list.getAllFoodCategories
+
 
 @Composable
 fun SearchAppBar(
@@ -30,6 +34,7 @@ fun SearchAppBar(
     onSelectedCategoryChanged: (String) -> Unit,
     onCategoryScrollPositionChanged: (Float) -> Unit,
     onToggleTheme: () -> Unit,
+    darkMode: Boolean,
 ) {
     Surface(
         modifier = Modifier
@@ -70,9 +75,19 @@ fun SearchAppBar(
                 )
 
                 IconButton(
-                    onClick = onToggleTheme
-                ){
-                    Icon(Icons.Filled.MoreVert)
+                    onClick = onToggleTheme,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(end = 4.dp),
+                ) {
+                    if (darkMode)
+                        Icon(
+                            painter = painterResource(id = ayush.foodie.R.drawable.ic_light_mode),
+                        )
+                    else
+                        Icon(
+                            painter = painterResource(id = ayush.foodie.R.drawable.ic_dark_mode),
+                        )
                 }
             }
 

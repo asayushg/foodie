@@ -15,5 +15,10 @@
     <fragment
         android:id="@+id/recipeFragment"
         android:name="ayush.foodie.presentation.ui.recipe.RecipeFragment"
-        android:label="RecipeFragment" />
+        android:label="RecipeFragment" >
+        <argument
+            android:name="recipeID"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 </navigation>

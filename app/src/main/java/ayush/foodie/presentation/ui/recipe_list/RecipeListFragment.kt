@@ -2,22 +2,24 @@ package ayush.foodie.presentation.ui.recipe_list
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import ayush.foodie.R
 import ayush.foodie.presentation.BaseApplication
 import ayush.foodie.presentation.components.LoadingListShimmer
 import ayush.foodie.presentation.components.RecipeCard
@@ -59,7 +61,8 @@ class RecipeListFragment : Fragment() {
                             onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
                             onCategoryScrollPositionChanged =
                             viewModel::onCategoryScrollPositionChanged,
-                            onToggleTheme = application::toggleLightTheme
+                            onToggleTheme = application::toggleLightTheme,
+                            darkMode = application.isDarkTheme.value,
                         )
 
                         Box(
@@ -72,7 +75,6 @@ class RecipeListFragment : Fragment() {
                                     cardHeight = 250.dp
                                 )
                             } else {
-                                Log.d("TAG", "onCreateView: ${recipes.size}")
                                 LazyColumn {
                                     itemsIndexed(
                                         items = recipes
@@ -80,20 +82,43 @@ class RecipeListFragment : Fragment() {
                                         viewModel.onChangeListScrollPosition(index)
                                         if ((index + 1) >= (viewModel.page.value * PAGE_SIZE) &&
                                             !viewModel.loading.value
-                                        ){
+                                        ) {
                                             viewModel.nextPage()
                                         }
 
                                         RecipeCard(recipe = recipe, onClick = {
-
+                                            val bundle = bundleOf("recipeId" to recipe.id)
+                                            view?.findNavController()
+                                                ?.navigate(R.id.viewRecipe, bundle)
                                         })
+                                        if (viewModel.loading.value && recipes.isNotEmpty()
+                                            && index == recipes.size - 1
+                                        ) {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(8.dp),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                CircularProgressIndicator()
+                                            }
+                                        }
                                     }
                                 }
                                 if (recipes.isEmpty())
-                                    Text(
-                                        text = "No Results to show!",
-                                        style = MaterialTheme.typography.h3,
-                                    )
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(8.dp),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(
+                                            text = "No Results to show!",
+                                            style = MaterialTheme.typography.h3,
+                                        )
+                                    }
                             }
                         }
                     }
